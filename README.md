@@ -40,14 +40,20 @@ namespace ListViewXamarin
         public GroupResult GetGroup(object itemData)
         {
             GroupResult itemGroup = null;
- 
+
             foreach (var item in this.ListView.DataSource.DisplayItems)
             {
-                if (item is GroupResult)
-                    itemGroup = item as GroupResult;
- 
-                if (item == itemData)
-                    break;
+                if(itemData is GroupResult)
+                {
+                    if (args.OldIndex > args.NewIndex && item == itemData) break;
+                    if (item is GroupResult) itemGroup = item as GroupResult;
+                    if (args.OldIndex < args.NewIndex && item == itemData) break;
+                }
+                else
+                {
+                    if (item == itemData) break;
+                    if (item is GroupResult) itemGroup = item as GroupResult;
+                }
             }
             return itemGroup;
         }
