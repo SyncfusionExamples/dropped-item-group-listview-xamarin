@@ -46,23 +46,29 @@ namespace ListViewXamarin
             {
                 int dropIndex = e.NewIndex;
                 var dropItem = ListView.DataSource.DisplayItems[dropIndex];
-                var dropedGroup = GetGroup(dropItem);
+                var dropedGroup = GetGroup(dropItem, e);
 
                 App.Current.MainPage.DisplayAlert("Dropped group", "" + dropedGroup.Key, "Ok");
             }
         }
 
-        public GroupResult GetGroup(object itemData)
+        public GroupResult GetGroup(object itemData, ItemDraggingEventArgs args)
         {
             GroupResult itemGroup = null;
 
             foreach (var item in this.ListView.DataSource.DisplayItems)
             {
-                if (item is GroupResult)
-                    itemGroup = item as GroupResult;
-
-                if (item == itemData)
-                    break;
+                if(itemData is GroupResult)
+                {
+                    if (args.OldIndex > args.NewIndex && item == itemData) break;
+                    if (item is GroupResult) itemGroup = item as GroupResult;
+                    if (args.OldIndex < args.NewIndex && item == itemData) break;
+                }
+                else
+                {
+                    if (item == itemData) break;
+                    if (item is GroupResult) itemGroup = item as GroupResult;
+                }
             }
             return itemGroup;
         }
